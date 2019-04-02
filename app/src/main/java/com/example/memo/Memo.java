@@ -1,53 +1,40 @@
 package com.example.memo;
 
+import android.content.Context;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import android.content.SharedPreferences;
 
-public class Memo implements Serializable {
-
-    private int memoId;
+public class Memo implements Serializable{
     private Date date;
     private String text;
-    private String importance;
+    private int priority;
     private boolean fullDisplayed;
-    private static DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyy hh:mm:ss a");
-
-    Calendar calendar;
-    String dateStr;
+    private static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy 'at' hh:mm aaa");
 
     public Memo() {
         this.date = new Date();
-
     }
 
-
-    public Memo(long time, String text) {
+    public Memo(long time, String text, int priority) {
         this.date = new Date(time);
-        /*this.importance = importance;*/
-        this.text=text;
-        /*calendar = Calendar.getInstance();*/
-        /*dateStr = dateFormat.format(calendar.getTime());*/
-
+        this.text = text;
+        this.priority = priority;
     }
 
-
-    public int getMemoId() {
-        return memoId;
+    public int getPriority() {
+        return priority;
     }
 
-    public void setMemoId(int memoId) {
-        this.memoId = memoId;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
-    public String getImportance() {
-        return importance;
-    }
-
-    public void setImportance(String importance) {
-        this.importance = importance;
+    public String getDate() {
+        return dateFormat.format(date);
     }
 
     public long getTime() {
@@ -56,10 +43,6 @@ public class Memo implements Serializable {
 
     public void setTime(long time) {
         this.date = new Date(time);
-    }
-
-    public String getDate() {
-        return dateFormat.format(date);
     }
 
     public void setText(String text) {

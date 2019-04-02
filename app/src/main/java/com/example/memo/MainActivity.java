@@ -9,15 +9,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 
@@ -25,9 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private Button btnAdd;
     private DBAccess databaseAccess;
-    /*boolean isDeleting = false;*/
     private List<Memo> memos;
-    MemoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
         this.databaseAccess = DBAccess.getInstance(this);
 
-        this.listView = findViewById(R.id.listView);
-        this.btnAdd = findViewById(R.id.btnAdd);
+        this.listView = (ListView) findViewById(R.id.listView);
+        this.btnAdd = (Button) findViewById(R.id.btnAdd);
 
         this.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,73 +56,60 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*initSettings();
-        initSortByClick();*/
+        initSettingsButton();
 
     }
-    /*
-    private void initSettings() {
-        String sortBy = getSharedPreferences("Memo", Context.MODE_PRIVATE).getString("sortfield","date");
 
-        RadioButton rbDate = (RadioButton) findViewById(R.id.radioDate);
-        RadioButton rbImp = (RadioButton) findViewById(R.id.radioImp);
-
-        if (sortBy.equalsIgnoreCase("date")) {
-            rbDate.setChecked(true);
-        }
-        else {
-            rbImp.setChecked(true);
-        }
-    }
-
-    private void initSortByClick() {
-        RadioGroup rgSortBy = (RadioGroup) findViewById(R.id.radioGroupSort);
-        rgSortBy.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(RadioGroup arg0, int arg1) {
-                RadioButton rbDate = (RadioButton) findViewById(R.id.radioDate);
-                RadioButton rbImp = (RadioButton) findViewById(R.id.radioImp);
-                if (rbDate.isChecked()) {
-                    getSharedPreferences("Memo", Context.MODE_PRIVATE).edit() .putString("sortfield", "date").commit();
-                }
-                else {
-                    getSharedPreferences("Memo", Context.MODE_PRIVATE).edit().putString("sortfield", "importance").commit();
-                }
+    private void initSettingsButton() {
+        Button ibList =  findViewById(R.id.btnSettings);
+        ibList.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MemoSettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
     }
-    */
 
-    @Override
+   /* @Override
     protected void onResume() {
         super.onResume();
+        databaseAccess.open();
+        this.memos = databaseAccess.getAllMemosByDate();
+        databaseAccess.close();
+        MemoAdapter adapter = new MemoAdapter(this, memos);
+        this.listView.setAdapter(adapter);
+    }*/
 
-        String sortBy = getSharedPreferences("Memo", Context.MODE_PRIVATE).getString("sortfield","memo");
+    @Override
+    public void onResume() {
+        super.onResume();
+        String sortBy = getSharedPreferences("MyMemoListPreferences", Context.MODE_PRIVATE).getString("sortfield", "date");
+        String sortOrder = getSharedPreferences("MyMemoListPreferences", Context.MODE_PRIVATE).getString("sortorder", "ASC");
 
         try {
-            databaseAccess.open();
-            this.memos = databaseAccess.getAllMemos();
-            databaseAccess.close();
+
+            if(sortBy.equalsIgnoreCase("date")) {
+                databaseAccess.open();
+                memos = databaseAccess.getAllMemosByDate(sortBy, sortOrder);
+                databaseAccess.close();
+            } else {
+                databaseAccess.open();
+                memos = databaseAccess.getAllMemosByPriority(sortBy, sortOrder);
+                databaseAccess.close();
+            }
+
             MemoAdapter adapter = new MemoAdapter(this, memos);
-            /*ListView listView = (ListView) findViewById(R.id.listView);
-            /*listView.setAdapter(adapter);listView.setAdapter(adapter);*/
             this.listView.setAdapter(adapter);
+
         }
         catch (Exception e) {
-            Toast.makeText(this, "Error retrieving memos", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error retrieving contacts", Toast.LENGTH_LONG).show();
         }
     }
 
     public void onAddClicked() {
         Intent intent = new Intent(this, EditActivity.class);
-        startActivity(intent);
-    }
-
-
-    public void onEditClicked(Memo memo) {
-        Intent intent = new Intent(this, EditActivity.class);
-        intent.putExtra("MEMO", memo);
         startActivity(intent);
     }
 
@@ -139,6 +121,12 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<Memo> adapter = (ArrayAdapter<Memo>) listView.getAdapter();
         adapter.remove(memo);
         adapter.notifyDataSetChanged();
+    }
+
+    public void onEditClicked(Memo memo) {
+        Intent intent = new Intent(this, EditActivity.class);
+        intent.putExtra("MEMO", memo);
+        startActivity(intent);
     }
 
     private class MemoAdapter extends ArrayAdapter<Memo> {
