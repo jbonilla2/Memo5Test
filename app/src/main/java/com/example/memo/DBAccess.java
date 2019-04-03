@@ -100,4 +100,21 @@ public class DBAccess {
         }
         return memos;
     }
+
+    public Memo getSpecificMemo(int memoDate) {
+        Memo memo = new Memo();
+        String query = "SELECT  * FROM memo WHERE date =" + memoDate;
+        Cursor cursor = database.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            memo.setTime(cursor.getInt(0));
+            memo.setText(cursor.getString(1));
+            memo.setPriority(cursor.getInt(2));
+
+            cursor.close();
+        }
+
+        return memo;
+    }
+
 }

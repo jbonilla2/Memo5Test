@@ -80,14 +80,14 @@
         android:id="@+id/radioGroupSortOrder">
 
         <RadioButton
-            android:text="Ascending"
+            android:text="High Priority First (Ascending)"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radioAscending"
             android:layout_weight="1" />
 
         <RadioButton
-            android:text="Descending"
+            android:text="Low Priority First (Descending)"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radioDescending"

@@ -13,7 +13,7 @@ import android.content.SharedPreferences;
 public class Memo implements Serializable{
     private Date date;
     private String text;
-    private int priority = 0;
+    private int priority = -1;
     private boolean fullDisplayed;
     private static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy 'at' hh:mm aaa", Locale.US);
 

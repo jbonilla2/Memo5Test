@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 
 public class EditActivity extends AppCompatActivity {
@@ -21,6 +22,7 @@ public class EditActivity extends AppCompatActivity {
     private Button btnSave;
     private Button btnCancel;
     private Memo memo;
+    private Memo newMemo;
     private DBAccess databaseAccess;
     static SharedPreferences prefs;
 
@@ -45,9 +47,9 @@ public class EditActivity extends AppCompatActivity {
                 this.etText.setText(memo.getText());
             }
         }
-       /* else {
-            memo = new Memo();
-        } */
+        else {
+            newMemo = new Memo();
+        }
 
  //Look at ContactActivity
 
@@ -57,6 +59,7 @@ public class EditActivity extends AppCompatActivity {
                 onSaveClicked();
             }
         });
+
         this.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,16 +74,25 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void onSaveClicked() {
+
+        initSortBy();
+        initSortByClick();
+
         DBAccess databaseAccess = DBAccess.getInstance(this);
         databaseAccess.open();
         if(memo == null) {
             // Add new memo
-            Memo temp = new Memo();
-            temp.setText(etText.getText().toString());
-            databaseAccess.save(temp);
+            //final Memo temp = new Memo();
+            //temp.setText(etText.getText().toString());
+            //databaseAccess.save(temp);
+
+            newMemo.setText(etText.getText().toString());
+            databaseAccess.save(newMemo);
+
         } else {
             // Update the memo
             memo.setText(etText.getText().toString());
+
             databaseAccess.update(memo);
         }
         databaseAccess.close();
@@ -91,30 +103,6 @@ public class EditActivity extends AppCompatActivity {
         this.finish();
     }
 
-    /*private void initPriorityClick() {
-        RadioGroup bgColor = (RadioGroup) findViewById(R.id.radioGroupImp);
-        bgColor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(RadioGroup arg0, int arg1) {
-                RadioButton rbLow = (RadioButton) findViewById(R.id.radioLow);
-                RadioButton rbMed = (RadioButton) findViewById(R.id.radioMed);
-                RadioButton rbHigh = (RadioButton) findViewById(R.id.radioHigh);
-                if (rbHigh.isChecked()) {
-                    prefs.edit().putString("priority", "high").commit();
-//                    memo.setPriority(1);
-                }
-                else if (rbMed.isChecked()) {
-                    prefs.edit().putString("priority", "med").commit();
-//                    memo.setPriority(2);
-                }
-                if (rbLow.isChecked()) {
-                    prefs.edit().putString("priority", "low").commit();
-//                    memo.setPriority(3);
-                }
-            }//method for allowing the color radio button group to edit the bgColor sharedprefs
-        });
-    }*/
 
     private void initSortBy() {
         String sortBy = getSharedPreferences("MyMemoListPreferences", Context.MODE_PRIVATE).getString("sortpriority","low");
@@ -136,24 +124,53 @@ public class EditActivity extends AppCompatActivity {
 
     private void initSortByClick() {
         RadioGroup rgSortBy = findViewById(R.id.radioGroupImp);
-        ContentValues values = new ContentValues();
+        //ContentValues values = new ContentValues();
         rgSortBy.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(RadioGroup arg0, int arg1) {
                 RadioButton rbLow = findViewById(R.id.radioLow);
                 RadioButton rbMed = findViewById(R.id.radioMed);
+
+
+                if(memo == null){
+
+
+                }
+
                 if (rbLow.isChecked()) {
-                    getSharedPreferences("MyMemoListPreferences", Context.MODE_PRIVATE).edit() .putString("sortpriority", "low").commit();
-                    memo.setPriority(3);
+                    getSharedPreferences("MyMemoListPreferences", Context.MODE_PRIVATE).edit().putString("sortpriority", "low").commit();
+
+                    if(memo == null){
+                        newMemo.setPriority(3);
+                    }
+                    else{
+                        memo.setPriority(3);
+                    }
+
+
+
                 }
                 else if (rbMed.isChecked()) {
                     getSharedPreferences("MyMemoListPreferences", Context.MODE_PRIVATE).edit().putString("sortpriority", "med").commit();
-                    memo.setPriority(2);
+                    //memo.setPriority(2);
+
+                    if(memo == null){
+                        newMemo.setPriority(2);
+                    }
+                    else{
+                        memo.setPriority(2);
+                    }
                 }
                 else {
                     getSharedPreferences("MyMemoListPreferences", Context.MODE_PRIVATE).edit().putString("sortpriority", "high").commit();
-                    memo.setPriority(1);
+                   // memo.setPriority(1);
+                    if(memo == null){
+                        newMemo.setPriority(1);
+                    }
+                    else{
+                        memo.setPriority(1);
+                    }
                 }
             }
         });
