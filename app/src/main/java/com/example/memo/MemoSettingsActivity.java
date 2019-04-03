@@ -1,9 +1,12 @@
 package com.example.memo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -19,6 +22,30 @@ public class MemoSettingsActivity extends AppCompatActivity {
         initSettings();
         initSortByClick();
         initSortOrderClick();
+        initSettingsButton();
+        initMemosButton();
+    }
+
+    private void initSettingsButton() {
+        Button ibList =  findViewById(R.id.btnSettings);
+        ibList.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MemoSettingsActivity.this, MemoSettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initMemosButton() {
+        Button bMemoMenu =  findViewById(R.id.btnMemoMenu);
+        bMemoMenu.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MemoSettingsActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initSettings() {
@@ -26,7 +53,7 @@ public class MemoSettingsActivity extends AppCompatActivity {
         String sortOrder = getSharedPreferences("MyMemoListPreferences", Context.MODE_PRIVATE).getString("sortorder","ASC");
 
         RadioButton rbPriority = findViewById(R.id.radioPriority);
-        RadioButton rbDate = (RadioButton) findViewById(R.id.radioDate);
+        RadioButton rbDate = findViewById(R.id.radioDate);
 
         if (sortBy.equalsIgnoreCase("priority")) {
             rbPriority.setChecked(true);
@@ -35,8 +62,8 @@ public class MemoSettingsActivity extends AppCompatActivity {
             rbDate.setChecked(true);
         }
 
-        RadioButton rbAscending = (RadioButton) findViewById(R.id.radioAscending);
-        RadioButton rbDescending = (RadioButton) findViewById(R.id.radioDescending);
+        RadioButton rbAscending = findViewById(R.id.radioAscending);
+        RadioButton rbDescending = findViewById(R.id.radioDescending);
         if (sortOrder.equalsIgnoreCase("ASC")) {
             rbAscending.setChecked(true);
         }
@@ -69,7 +96,7 @@ public class MemoSettingsActivity extends AppCompatActivity {
 
             @Override
             public void onCheckedChanged(RadioGroup arg0, int arg1) {
-                RadioButton rbAscending = (RadioButton) findViewById(R.id.radioAscending);
+                RadioButton rbAscending = findViewById(R.id.radioAscending);
                 if (rbAscending.isChecked()) {
                     getSharedPreferences("MyMemoListPreferences", Context.MODE_PRIVATE).edit().putString("sortorder", "ASC").commit();
                 }

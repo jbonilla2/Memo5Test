@@ -36,6 +36,8 @@ public class EditActivity extends AppCompatActivity {
         prefs = getSharedPreferences("bgPriority", MODE_PRIVATE);
         String priorityStr = prefs.getString("priority", "low");
 
+//Issue is here
+
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
             memo = (Memo) bundle.get("MEMO");
@@ -43,6 +45,12 @@ public class EditActivity extends AppCompatActivity {
                 this.etText.setText(memo.getText());
             }
         }
+       /* else {
+            memo = new Memo();
+        } */
+
+ //Look at ContactActivity
+
         this.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

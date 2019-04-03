@@ -6,14 +6,16 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+
 import android.content.SharedPreferences;
 
 public class Memo implements Serializable{
     private Date date;
     private String text;
-    private int priority;
+    private int priority = 0;
     private boolean fullDisplayed;
-    private static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy 'at' hh:mm aaa");
+    private static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy 'at' hh:mm aaa", Locale.US);
 
     public Memo() {
         this.date = new Date();

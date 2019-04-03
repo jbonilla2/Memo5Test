@@ -17,15 +17,15 @@
 
         <ImageView
             android:id="@+id/btnEdit"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentLeft="true"
             app:srcCompat="@android:drawable/ic_menu_edit" />
 
         <ImageView
             android:id="@+id/btnDelete"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentRight="true"
             app:srcCompat="@android:drawable/ic_delete" />
 
